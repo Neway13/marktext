@@ -147,7 +147,7 @@ const handleResponseForSave = async (e, { id, filename, markdown, pathname, opti
         ipcMain.emit('window-file-saved', win.id, filePath)
         win.webContents.send('mt::tab-saved', id)
       }
-      checkImgAndDelete(filePath, markdown)
+      checkImgAndDelete(win, filePath, markdown)
       return id
     })
     .catch(err => {
@@ -156,53 +156,78 @@ const handleResponseForSave = async (e, { id, filename, markdown, pathname, opti
     })
 }
 // 检查需要删除的图片
-const checkImgAndDelete = async (filePath, markdown) => {
-  const imgPath = getRelativeImgPathFromMarkdown(markdown)
+const checkImgAndDelete = async (win, filePath, markdown) => {
+  const imgRow = getRelativeImgPathFromMarkdown(markdown)
   const dir = filePath.replace('.md', '.assets')
   const hasDir = fs.existsSync(dir)
-  if (hasDir && imgPath.length === 0) {
-    fs.removeSync(dir)
+  if (hasDir && imgRow.length === 0) {
+    if (await showIfDeleteMessage(win, [dir])) {
+      fs.removeSync(dir)
+    }
     return
   } else if (!hasDir) {
     return
   }
   const dirFiles = fs.readdirSync(dir)
-  // 比对，并删除不需要的文件
+  // 比对，找出不需要的文件
+  const notNeedFiles = []
   dirFiles.forEach(function (dirFile, i) {
     let ifhas = false
-    imgPath.forEach(function (onePath, i) {
-      if (dirFile === onePath) {
+    imgRow.forEach(function (onePath, i) {
+      // 宽松一点，只要包含，就认为不能删除
+      if (onePath.indexOf(dirFile) > -1) {
         ifhas = true
       }
     })
     if (!ifhas) {
-      fs.rm(dir + path.sep + dirFile).catch(error => {
-        let msg = `Error deleting image ${dirFile}: ${error.message}`
+      notNeedFiles.push(dir + path.sep + dirFile)
+    }
+  })
+  // 删除不需要的文件
+  if (notNeedFiles.length > 0 && await showIfDeleteMessage(win, notNeedFiles)) {
+    notNeedFiles.forEach(function (notNeedFile, i) {
+      fs.rm(notNeedFile).catch(error => {
+        let msg = `Error deleting image ${notNeedFile}: ${error.message}`
         console.log(msg)
       })
-    }
-  })
+    })
+  }
 }
-// 从文本中获取所有相对路径
+// 从文本中获取所有url解码后的行
 const getRelativeImgPathFromMarkdown = (markdown) => {
-  const imgPath = []
-  const strs = markdown.match(/!\[.*?\]\(.+?\)/g)
+  const imgRow = []
+  // 先贪婪的方式获取可能的图片链接
+  const strs = markdown.match(/\[.*?\]\(.+\)/g)
   if (strs == null) {
-    return imgPath
+    return imgRow
   }
   strs.forEach(function (e, i) {
-    // 图片path
-    const filepath = e.match(/\]\((.*?)\)/)[1]
-    if (!filepath.startsWith('http') && !path.isAbsolute(filepath)) {
-      let filename = filepath.split('/')[1]
-      if (escape(filename).indexOf('%u') > 0) {
-        filename = encodeURI(filename)
-      }
-      imgPath.push(filename)
-    }
+    imgRow.push(decodeURI(e))
   })
-  return imgPath
+  return imgRow
 }
+// files 为数组，注意
+const showIfDeleteMessage = async (win, files) => {
+  const { response } = await dialog.showMessageBox(win, {
+    type: 'warning',
+    buttons: ['Yes, delete', 'No, do nothing'],
+    defaultId: 1,
+    message: `Do you want to delete ${files.length} ${files.length === 1 ? 'file' : 'files'}?\n\n${files.join('\n')}`,
+    detail: '！！！',
+    cancelId: 1,
+    noLink: true
+  })
+
+  switch (response) {
+    case 0:
+      return true
+    case 1:
+      return false
+    default:
+      return false
+  }
+}
+
 const showUnsavedFilesMessage = async (win, files) => {
   const { response } = await dialog.showMessageBox(win, {
     type: 'warning',
