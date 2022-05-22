@@ -1,9 +1,7 @@
 name: Release
 
 on:
-  push:
-    branches:
-      - 'release-v*'
+  workflow_dispatch: {}  
 
 jobs:
   unix:
