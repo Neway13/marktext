@@ -189,12 +189,12 @@ const imageCtrl = ContentState => {
     // neway delete img file start
     const imgUrl=this.currentFile.pathname.replace(this.currentFile.filename,"")+token.src
     shell.trashItem(imgUrl).catch(err => {
-			notice.notify({
-			  title: 'Error while deleting'+imgUrl,
-			  type: 'error',
-			  message: err.message
-			})
-		})
+      notice.notify({
+        title: 'Error while deleting'+imgUrl,
+        type: 'error',
+        message: err.message
+      })
+    })
     // neway delete img file end
     
     return this.muya.dispatchChange()
