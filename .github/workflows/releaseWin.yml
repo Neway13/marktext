@@ -73,3 +73,11 @@ jobs:
           get-filehash -Algorithm SHA256 "build\marktext-setup.exe"
           get-filehash -Algorithm SHA256 "build\marktext-*-win.zip"
         shell: pwsh
+      - name: upload file 
+        uses: actions/upload-artifact@v2
+        with:
+          name: marktext_artifact
+          path: |
+            build\marktext-setup.exe
+            build\marktext-*-win.zip
+          
