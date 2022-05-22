@@ -1,5 +1,7 @@
 import { URL_REG, DATA_URL_REG } from '../config'
 import { correctImageSrc } from '../utils/getImageInfo'
+import notice from '../services/notification'
+import shell from 'electron'
 
 const imageCtrl = ContentState => {
   /**
@@ -183,6 +185,18 @@ const imageCtrl = ContentState => {
     // Hide image toolbar and image transformer
     eventCenter.dispatch('muya-transformer', { reference: null })
     eventCenter.dispatch('muya-image-toolbar', { reference: null })
+    
+    // neway delete img file start
+    const imgUrl=DIRNAME+'\'+token.src
+    shell.trashItem(imgUrl).catch(err => {
+			notice.notify({
+			  title: 'Error while deleting'+imgUrl,
+			  type: 'error',
+			  message: err.message
+			})
+		})
+    // neway delete img file end
+    
     return this.muya.dispatchChange()
   }
 
