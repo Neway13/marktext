@@ -3,7 +3,7 @@ name: Release
 on:
   push:
     branches:
-      - 'release-v*'
+      - 'ignore'
 
 jobs:
   unix:
