@@ -187,7 +187,7 @@ const imageCtrl = ContentState => {
     eventCenter.dispatch('muya-image-toolbar', { reference: null })
     
     // neway delete img file start
-    const imgUrl=__dirname+'\'+token.src
+    const imgUrl=this.currentFile.pathname.replace(this.currentFile.filename,"")+token.src
     shell.trashItem(imgUrl).catch(err => {
 			notice.notify({
 			  title: 'Error while deleting'+imgUrl,
