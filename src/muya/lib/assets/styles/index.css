@@ -902,7 +902,8 @@ span.ag-warn.ag-emoji-marked-text {
 }
 
 .ag-inline-image {
-  display: inline-block;
+  display: block;
+  text-align: right;
   position: relative;
   background: var(--codeBlockBgColor);
   border-radius: 2px;
