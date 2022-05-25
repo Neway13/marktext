@@ -104,7 +104,9 @@ const change = async (win, pathname, type, endOfLine, autoGuessEncoding, trimTra
 
 const addDir = (win, pathname, type) => {
   if (type === 'file') return
-
+  if (pathname.endsWith('.assets')) {
+    return
+  }
   const directory = {
     pathname,
     name: path.basename(pathname),
