@@ -1,6 +1,5 @@
 import { URL_REG, DATA_URL_REG } from '../config'
 import { correctImageSrc } from '../utils/getImageInfo'
-import { shell, remote } from 'electron'
 
 const imageCtrl = ContentState => {
   /**
@@ -180,18 +179,18 @@ const imageCtrl = ContentState => {
       start: { key, offset: start },
       end: { key, offset: start }
     }
+
     this.singleRender(block)
     // Hide image toolbar and image transformer
     eventCenter.dispatch('muya-transformer', { reference: null })
     eventCenter.dispatch('muya-image-toolbar', { reference: null })
-    
+
     // neway delete img file start
-    const imgUrl=this.currentFile.pathname.replace(this.currentFile.filename,"")+token.src
-    shell.trashItem(imgUrl).catch(err => {
-      remote.dialog.showErrorBox('An Error Message','Error while deleting '+imgUrl+':'+ err.message)
-    })
+    if (!token.src.startsWith('http')) {
+      this.muya.options.imageDelete(token.src)
+    }
     // neway delete img file end
-    
+
     return this.muya.dispatchChange()
   }
 

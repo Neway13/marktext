@@ -147,6 +147,7 @@ const handleResponseForSave = async (e, { id, filename, markdown, pathname, opti
         ipcMain.emit('window-file-saved', win.id, filePath)
         win.webContents.send('mt::tab-saved', id)
       }
+      checkImgAndDelete(filePath, markdown)
       return id
     })
     .catch(err => {
@@ -154,7 +155,54 @@ const handleResponseForSave = async (e, { id, filename, markdown, pathname, opti
       win.webContents.send('mt::tab-save-failure', id, err.message)
     })
 }
-
+// 检查需要删除的图片
+const checkImgAndDelete = async (filePath, markdown) => {
+  const imgPath = getRelativeImgPathFromMarkdown(markdown)
+  const dir = filePath.replace('.md', '.assets')
+  const hasDir = fs.existsSync(dir)
+  if (hasDir && imgPath.length === 0) {
+    fs.removeSync(dir)
+    return
+  } else if (!hasDir) {
+    return
+  }
+  const dirFiles = fs.readdirSync(dir)
+  // 比对，并删除不需要的文件
+  dirFiles.forEach(function (dirFile, i) {
+    let ifhas = false
+    imgPath.forEach(function (onePath, i) {
+      if (dirFile === onePath) {
+        ifhas = true
+      }
+    })
+    if (!ifhas) {
+      fs.rm(dir + path.sep + dirFile).catch(error => {
+        let msg = `Error deleting image ${dirFile}: ${error.message}`
+        console.log(msg)
+      })
+    }
+  })
+}
+// 从文本中获取所有相对路径
+const getRelativeImgPathFromMarkdown = (markdown) => {
+  const imgPath = []
+  const strs = markdown.match(/!\[.*?\]\(.+?\)/g)
+  if (strs == null) {
+    return imgPath
+  }
+  strs.forEach(function (e, i) {
+    // 图片path
+    const filepath = e.match(/\]\((.*?)\)/)[1]
+    if (!filepath.startsWith('http') && !path.isAbsolute(filepath)) {
+      let filename = filepath.split('/')[1]
+      if (escape(filename).indexOf('%u') > 0) {
+        filename = encodeURI(filename)
+      }
+      imgPath.push(filename)
+    }
+  })
+  return imgPath
+}
 const showUnsavedFilesMessage = async (win, files) => {
   const { response } = await dialog.showMessageBox(win, {
     type: 'warning',
