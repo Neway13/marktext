@@ -74,20 +74,8 @@ jobs:
           get-filehash -Algorithm SHA256 "build\marktext-*-win.zip"
         shell: pwsh
         
-      - name: upload marktext-setup.exe 
-        uses: actions/upload-artifact@v2
-        with:
-          name: marktext-setup.exe
-          path: build\marktext-setup.exe
-          
       - name: upload marktext-x64-win.zip 
         uses: actions/upload-artifact@v2
         with:
           name: marktext-x64-win.zip
           path: build\marktext-x64-win.zip
-          
-      - name: upload marktext-ia32-win.zip 
-        uses: actions/upload-artifact@v2
-        with:
-          name: marktext-ia32-win.zip
-          path: build\marktext-ia32-win.zip
