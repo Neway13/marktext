@@ -95,6 +95,7 @@ div.ag-show-quick-insert-hint p.ag-paragraph.ag-active > span.ag-paragraph-conte
   display: block;
   white-space: pre-wrap;
   word-break: break-word;
+  text-align: justify;
 }
 
 /* TODO: This disables wrapping long lines in code blocks, allowing
