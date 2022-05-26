@@ -354,6 +354,7 @@ export default {
   }
 
   .word-count {
+    display: none;
     cursor: pointer;
     font-size: 14px;
     color: var(--editorColor30);

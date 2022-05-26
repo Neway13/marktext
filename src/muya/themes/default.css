@@ -179,7 +179,7 @@ kbd {
     font-weight: bold;
     line-height: 1.4;
     cursor: text;
-    color: var(--editorColor80);
+    color: var(--themeColor);
   }
 
   h1:hover a.anchor,
@@ -223,27 +223,33 @@ kbd {
   }
 
   h1 {
-    font-size: 1.875em;
+    font-size: 2.0em;
   }
 
   h2 {
-    font-size: 1.5em;
+    font-size: 1.8em;
+    
+    
   }
 
   h3 {
-    font-size: 1.375em;
+    font-size: 1.6em;
+    padding-left: 10px;
   }
 
   h4 {
-    font-size: 1.25em;
+    font-size: 1.4em;
+    padding-left: 20px;
   }
 
   h5 {
-    font-size: 1.125em;
+    font-size: 1.2em;
+    padding-left: 30px;
   }
 
   h6 {
     font-size: 1em;
+    padding-left: 40px;
   }
 
   h1 .ag-gray {
