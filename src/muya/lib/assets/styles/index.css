@@ -903,7 +903,7 @@ span.ag-warn.ag-emoji-marked-text {
 
 .ag-inline-image {
   display: block;
-  text-align: right;
+  text-align: center;
   position: relative;
   background: var(--codeBlockBgColor);
   border-radius: 2px;
