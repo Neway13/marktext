@@ -127,6 +127,9 @@ const actions = {
   ASK_FOR_OPEN_PROJECT ({ commit }) {
     ipcRenderer.send('mt::ask-for-open-project-in-sidebar')
   },
+  ASK_FOR_OPEN_PROJECT_PATH ({ commit }, path) {
+    ipcRenderer.send('mt::ask-for-open-project-in-sidebar-bypath', path)
+  },
   LISTEN_FOR_SIDEBAR_CONTEXT_MENU ({ commit, state }) {
     bus.$on('SIDEBAR::show-in-folder', () => {
       const { pathname } = state.activeItem

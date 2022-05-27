@@ -103,6 +103,17 @@
 
     <compound>
       <template #head>
+        <h6 class="title">Project paths:</h6>
+      </template>
+      <template #children>
+        <text-box description='absolute paths, multiple paths separated by ; ,for example :\n C:"c:/";D:"d:/" ' :input="projectPaths"
+          :defaultValue="projectPaths"
+          :onChange="value => onSelectChange('projectPaths', value)"></text-box>
+      </template>
+    </compound>
+
+    <compound>
+      <template #head>
         <h6 class="title">Misc:</h6>
       </template>
       <template #children>
@@ -126,6 +137,7 @@ import CurSelect from '../common/select'
 import Bool from '../common/bool'
 import Separator from '../common/separator'
 import { isOsx } from '@/util'
+import TextBox from '../common/textBox'
 
 import {
   titleBarStyleOptions,
@@ -140,7 +152,8 @@ export default {
     Bool,
     Range,
     CurSelect,
-    Separator
+    Separator,
+    TextBox
   },
   data () {
     this.titleBarStyleOptions = titleBarStyleOptions
@@ -162,7 +175,8 @@ export default {
       hideScrollbar: state => state.preferences.hideScrollbar,
       wordWrapInToc: state => state.preferences.wordWrapInToc,
       fileSortBy: state => state.preferences.fileSortBy,
-      language: state => state.preferences.language
+      language: state => state.preferences.language,
+      projectPaths: state => state.preferences.projectPaths
     }),
     startUpAction: {
       get: function () {

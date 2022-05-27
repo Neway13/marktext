@@ -368,6 +368,11 @@
     "type": "string",
     "default": "./assets"
   },
+  "projectPaths": {
+    "description": "projects.",
+    "type": "string",
+    "default": "root:\"/\""
+  },
   "sideBarVisibility": {
     "description": "View--Whether the side bar is visible.",
     "type": "boolean",

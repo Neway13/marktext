@@ -37,6 +37,7 @@ const state = {
   imageInsertAction: 'folder',
   imagePreferRelativeDirectory: false,
   imageRelativeDirectoryName: './assets',
+  projectPaths: 'root:"/"',
   hideLinkPopup: false,
   autoCheck: false,
 
