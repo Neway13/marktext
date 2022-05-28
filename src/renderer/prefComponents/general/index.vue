@@ -106,9 +106,9 @@
         <h6 class="title">Project paths:</h6>
       </template>
       <template #children>
-        <text-box description='absolute paths, multiple paths separated by ; ,for example :\n C:"c:/";D:"d:/" ' :input="projectPaths"
+        <text-box description='JsonArray, name and path(absolute path) is required ;for example : [{"name":"name1","path":"\opt"},{"name":"name2","path":"\var"}] ' :input="projectPaths"
           :defaultValue="projectPaths"
-          :onChange="value => onSelectChange('projectPaths', value)"></text-box>
+          :onChange="value => onSelectChange('projectPaths',  JSON.parse(value))"></text-box>
       </template>
     </compound>
 
@@ -176,7 +176,7 @@ export default {
       wordWrapInToc: state => state.preferences.wordWrapInToc,
       fileSortBy: state => state.preferences.fileSortBy,
       language: state => state.preferences.language,
-      projectPaths: state => state.preferences.projectPaths
+      projectPaths: state => JSON.stringify(state.preferences.projectPaths)
     }),
     startUpAction: {
       get: function () {

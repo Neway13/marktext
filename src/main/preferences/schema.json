@@ -65,7 +65,8 @@
   },
   "defaultDirectoryToOpen": {
     "description": "General--The default directory that should be opened on startup when startUp=folder.",
-    "type": "string"
+    "type": "string",
+    "default": ".\\docs"
   },
   "language": {
     "description": "General--The language MarkText use.",
@@ -366,12 +367,32 @@
   "imageRelativeDirectoryName": {
     "description": "Image--The relative image folder name.",
     "type": "string",
-    "default": "./assets"
+    "default": "./${filename}.assets"
   },
   "projectPaths": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://example.com/product.schema.json",
     "description": "projects.",
-    "type": "string",
-    "default": "root:\"/\""
+    "type": "array",
+    "items": { "$ref": "#/$defs/projectPath" },
+    "default": [{
+      "name": "Default Docs",
+      "path": ".\\docs"
+    }],
+    "$defs": {
+      "projectPath": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          }
+        },
+        "required": [ "name", "path" ]
+      }
+    }
   },
   "sideBarVisibility": {
     "description": "View--Whether the side bar is visible.",

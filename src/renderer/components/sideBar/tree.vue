@@ -100,16 +100,7 @@ export default {
       showOpenedFiles: true,
       showMyProject: false,
       createName: '',
-      myProjects: [
-        {
-          name: '学习笔记',
-          path: 'C:\\document\\同步云\\我的坚果云\\学习笔记'
-        },
-        {
-          name: '公司笔记',
-          path: 'C:\\document\\同步云\\中移互联网\\中移互联网笔记'
-        }
-      ]
+      myProjects: this.$store.state.preferences.projectPaths
     }
   },
   props: {

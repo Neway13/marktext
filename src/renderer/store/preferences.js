@@ -36,8 +36,8 @@ const state = {
   hideQuickInsertHint: false,
   imageInsertAction: 'folder',
   imagePreferRelativeDirectory: false,
-  imageRelativeDirectoryName: './assets',
-  projectPaths: 'root:"/"',
+  imageRelativeDirectoryName: '',
+  projectPaths: '[]',
   hideLinkPopup: false,
   autoCheck: false,
 

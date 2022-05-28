@@ -186,9 +186,9 @@ const imageCtrl = ContentState => {
     eventCenter.dispatch('muya-image-toolbar', { reference: null })
 
     // neway delete img file start
-    if (!token.src.startsWith('http')) {
-      this.muya.options.imageDelete(token.src)
-    }
+    // if (!token.src.startsWith('http')) {
+    // this.muya.options.imageDelete(token.src)
+    // }
     // neway delete img file end
 
     return this.muya.dispatchChange()
