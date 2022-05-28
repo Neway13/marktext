@@ -101,7 +101,7 @@ import notice from '@/services/notification'
 import Printer from '@/services/printService'
 import { isOsSpellcheckerSupported, offsetToWordCursor, validateLineCursor, SpellChecker } from '@/spellchecker'
 import { delay, isOsx, animatedScrollTo } from '@/util'
-import { moveImageToFolder, moveToRelativeFolder, uploadImage, deleteImage } from '@/util/fileSystem'
+import { moveImageToFolder, moveToRelativeFolder, uploadImage } from '@/util/fileSystem'
 import { guessClipboardFilePath } from '@/util/clipboard'
 import { getCssForOptions, getHtmlToc } from '@/util/pdf'
 import { addCommonStyle, setEditorWidth } from '@/util/theme'
@@ -597,8 +597,7 @@ export default {
         imageAction: this.imageAction.bind(this),
         imagePathPicker: this.imagePathPicker.bind(this),
         clipboardFilePath: guessClipboardFilePath,
-        imagePathAutoComplete: this.imagePathAutoComplete.bind(this),
-        imageDelete: this.imageDelete.bind(this)
+        imagePathAutoComplete: this.imagePathAutoComplete.bind(this)
       }
 
       if (/dark/i.test(theme)) {
@@ -778,11 +777,6 @@ export default {
         const iconClass = f.type === 'directory' ? 'icon-folder' : 'icon-image'
         return Object.assign(f, { iconClass, text: f.file + (f.type === 'directory' ? '/' : '') })
       })
-    },
-
-    async imageDelete (src) {
-      const { pathname } = this.currentFile
-      deleteImage(pathname, src)
     },
 
     async imageAction (image, id, alt = '') {

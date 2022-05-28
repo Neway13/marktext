@@ -68,19 +68,6 @@ export const moveToRelativeFolder = async (cwd, relativeName, filePath, imagePat
   return dstRelPath
 }
 
-export const deleteImage = async (pathname, imgSrc) => {
-  let imgPath
-  if (path.isAbsolute(imgSrc)) {
-    imgPath = imgSrc
-  } else {
-    let dir = path.dirname(pathname)
-    imgPath = path.resolve(dir, imgSrc)
-  }
-  fs.rm(imgPath).catch(error => {
-    let msg = `Error deleting image ${imgPath}: ${error.message}`
-    console.log(msg)
-  })
-}
 export const moveImageToFolder = async (pathname, image, outputDir) => {
   await fs.ensureDir(outputDir)
   const isPath = typeof image === 'string'
