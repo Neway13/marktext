@@ -294,7 +294,7 @@ export default {
     }
   }
   .opened-files {
-    display: flex;
+    display: none;
     flex-direction: column;
   }
   .default-cursor {
