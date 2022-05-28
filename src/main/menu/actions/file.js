@@ -460,7 +460,7 @@ ipcMain.on('mt::ask-for-open-project-in-sidebar', async e => {
 
 ipcMain.on('mt::ask-for-open-project-in-sidebar-bypath', async (e, pathname) => {
   const win = BrowserWindow.fromWebContents(e.sender)
-  openFileOrFolder(win, pathname);
+  openFileOrFolder(win, pathname)
 })
 
 ipcMain.on('mt::format-link-click', (e, { data, dirname }) => {

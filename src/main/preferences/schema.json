@@ -65,8 +65,7 @@
   },
   "defaultDirectoryToOpen": {
     "description": "General--The default directory that should be opened on startup when startUp=folder.",
-    "type": "string",
-    "default": ".\\docs"
+    "type": "string"
   },
   "language": {
     "description": "General--The language MarkText use.",
@@ -376,8 +375,8 @@
     "type": "array",
     "items": { "$ref": "#/$defs/projectPath" },
     "default": [{
-      "name": "Default Docs",
-      "path": ".\\docs"
+      "name": "Blank, Add Please",
+      "path": ""
     }],
     "$defs": {
       "projectPath": {
