@@ -143,13 +143,7 @@ const actions = {
     })
     bus.$on('SIDEBAR::remove', () => {
       const { pathname } = state.activeItem
-      shell.trashItem(pathname).catch(err => {
-        notice.notify({
-          title: 'Error while deleting',
-          type: 'error',
-          message: err.message
-        })
-      })
+      ipcRenderer.send('mt::delete-path', pathname)
     })
     bus.$on('SIDEBAR::copy-cut', type => {
       const { pathname: src } = state.activeItem

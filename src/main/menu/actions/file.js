@@ -161,9 +161,7 @@ const checkImgAndDelete = async (win, filePath, markdown) => {
   const dir = filePath.replace('.md', '.assets')
   const hasDir = fs.existsSync(dir)
   if (hasDir && imgRow.length === 0) {
-    if (await showIfDeleteMessage(win, [dir])) {
-      fs.removeSync(dir)
-    }
+    await tryDelete(win, [dir])
     return
   } else if (!hasDir) {
     return
@@ -184,14 +182,7 @@ const checkImgAndDelete = async (win, filePath, markdown) => {
     }
   })
   // 删除不需要的文件
-  if (notNeedFiles.length > 0 && await showIfDeleteMessage(win, notNeedFiles)) {
-    notNeedFiles.forEach(function (notNeedFile, i) {
-      fs.rm(notNeedFile).catch(error => {
-        let msg = `Error deleting image ${notNeedFile}: ${error.message}`
-        console.log(msg)
-      })
-    })
-  }
+  await tryDelete(win, notNeedFiles)
 }
 // 从文本中获取所有url解码后的行
 const getRelativeImgPathFromMarkdown = (markdown) => {
@@ -233,7 +224,22 @@ const showIfDeleteMessage = async (win, files) => {
       return false
   }
 }
-
+// 删除文件或者文件夹
+const tryDelete = async (win, paths) => {
+  // 删除不需要的文件
+  if (paths != null && paths.length > 0 && await showIfDeleteMessage(win, paths)) {
+    paths.forEach(function (path, i) {
+      shell.trashItem(path).catch(err => {
+        console.log(err.message + ':\n' + path)
+        win.webContents.send('mt::show-notification', {
+          title: 'An error occurred while deleting files/dirs',
+          type: 'error',
+          message: err.message + ':\n' + path
+        })
+      })
+    })
+  }
+}
 const showUnsavedFilesMessage = async (win, files) => {
   const { response } = await dialog.showMessageBox(win, {
     type: 'warning',
@@ -288,6 +294,11 @@ const removePrintServiceFromWindow = win => {
 ipcMain.on('mt::save-tabs', (e, unsavedFiles) => {
   Promise.all(unsavedFiles.map(file => handleResponseForSave(e, file)))
     .catch(log.error)
+})
+
+ipcMain.on('mt::delete-path', async (e, path) => {
+  const win = BrowserWindow.fromWebContents(e.sender)
+  await tryDelete(win, [path])
 })
 
 ipcMain.on('mt::save-and-close-tabs', async (e, unsavedFiles) => {
