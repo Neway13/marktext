@@ -196,12 +196,18 @@ const checkImgAndDelete = async (win, filePath, markdown) => {
 // 从文本中获取所有url解码后的行
 const getRelativeImgPathFromMarkdown = (markdown) => {
   const imgRow = []
-  // 先贪婪的方式获取可能的图片链接
-  const strs = markdown.match(/\[.*?\]\(.+\)/g)
-  if (strs == null) {
-    return imgRow
+  // 贪婪的方式获取markdown图片链接
+  let imgMark = markdown.match(/\[.*?\]\(.+\)/g)
+  // 非贪婪的方式获取Html的图片链接
+  let imgHtml = markdown.match(/ src.+?".+?"/g)
+  if (imgMark == null) {
+    imgMark = []
   }
-  strs.forEach(function (e, i) {
+  if (imgHtml == null) {
+    imgHtml = []
+  }
+  imgMark.push.apply(imgMark, imgHtml)
+  imgMark.forEach(function (e, i) {
     imgRow.push(decodeURI(e))
   })
   return imgRow
