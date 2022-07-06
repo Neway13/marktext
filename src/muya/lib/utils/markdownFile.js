@@ -5,6 +5,7 @@ const MARKDOWN_EXTENSIONS = Object.freeze([
   'mdown',
   'mkdn',
   'md',
+  'mde',
   'mkd',
   'mdwn',
   'mdtxt',

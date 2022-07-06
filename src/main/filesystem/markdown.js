@@ -7,6 +7,7 @@ import { isDirectory2 } from 'common/filesystem'
 import { isMarkdownFile } from 'common/filesystem/paths'
 import { normalizeAndResolvePath, writeFile } from '../filesystem'
 import { guessEncoding } from './encoding'
+import crypto from "crypto";
 
 const getLineEnding = lineEnding => {
   if (lineEnding === 'lf') {
@@ -19,7 +20,7 @@ const getLineEnding = lineEnding => {
   log.error(`Invalid end of line character: expected "lf" or "crlf" but got "${lineEnding}".`)
   return '\n'
 }
-
+const mm = crypto.createHash('md5').update('43214321md').digest('hex')
 const convertLineEndings = (text, lineEnding) => {
   return text.replace(LINE_ENDING_REG, getLineEnding(lineEnding))
 }
@@ -60,7 +61,9 @@ export const writeMarkdownFile = (pathname, content, options) => {
   if (adjustLineEndingOnSave) {
     content = convertLineEndings(content, lineEnding)
   }
-
+  if (extension == '.mde') {
+    content = aesEncryptiv(content, mm)
+  }
   const buffer = iconv.encode(content, encoding, { addBOM: isBom })
 
   // TODO(@fxha): "safeSaveDocuments" using temporary file and rename syscall.
@@ -89,7 +92,13 @@ export const loadMarkdownFile = async (pathname, preferredEol, autoGuessEncoding
   }
 
   let markdown = iconv.decode(buffer, encoding.encoding)
+  try {
+    if (pathname.endsWith('.mde')) {
+      markdown = aesDecryptiv(markdown, mm)
+    }
+  } catch (err) {
 
+  }
   // Detect line ending
   const isLf = LF_LINE_ENDING_REG.test(markdown)
   const isCrlf = CRLF_LINE_ENDING_REG.test(markdown)
@@ -145,4 +154,29 @@ export const loadMarkdownFile = async (pathname, preferredEol, autoGuessEncoding
     // raw file information
     isMixedLineEndings
   }
+}
+
+export const aesEncrypt = (str, key) => {
+  const cipher = crypto.createCipher('aes-128-ecb', key)
+  return cipher.update(str, 'utf8', 'base64') + cipher.final('base64')
+}
+
+export const aesDecrypt = (str, key) => {
+  const decipher = crypto.createDecipher('aes-128-ecb', key)
+  return decipher.update(str, 'base64', 'utf8') + decipher.final('utf8')
+}
+
+
+export const aesEncryptiv = (str, key) => {
+  const keyBuffer = Buffer.from(key,'hex')
+  const iv = keyBuffer
+  const cipher = crypto.createCipheriv('aes-128-cbc', keyBuffer, iv)
+  return cipher.update(str, 'utf8', 'base64') + cipher.final('base64')
+}
+
+export const aesDecryptiv = (str, key) => {
+  const keyBuffer = Buffer.from(key,'hex')
+  const iv = keyBuffer
+  const decipher = crypto.createDecipheriv('aes-128-cbc', keyBuffer, iv)
+  return decipher.update(str, 'base64', 'utf8') + decipher.final('utf8')
 }

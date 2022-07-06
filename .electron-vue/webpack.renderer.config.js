@@ -144,6 +144,10 @@ const rendererConfig = {
       {
         test: /\.md$/,
         type: 'asset/source'
+      },
+      {
+        test: /\.mde$/,
+        type: 'asset/source'
       }
     ]
   },

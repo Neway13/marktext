@@ -158,7 +158,7 @@ const handleResponseForSave = async (e, { id, filename, markdown, pathname, opti
 // 检查需要删除的图片
 const checkImgAndDelete = async (win, filePath, markdown) => {
   const imgRow = getRelativeImgPathFromMarkdown(markdown)
-  const dir = filePath.replace('.md', '.assets')
+  const dir = filePath.replace('.mde', '.assets').replace('.md', '.assets')
   const hasDir = fs.existsSync(dir)
   if (hasDir && imgRow.length === 0) {
     await tryDelete(win, [dir])
