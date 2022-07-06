@@ -7,7 +7,7 @@ import { isDirectory2 } from 'common/filesystem'
 import { isMarkdownFile } from 'common/filesystem/paths'
 import { normalizeAndResolvePath, writeFile } from '../filesystem'
 import { guessEncoding } from './encoding'
-import crypto from "crypto";
+import crypto from 'crypto'
 
 const getLineEnding = lineEnding => {
   if (lineEnding === 'lf') {
@@ -61,7 +61,7 @@ export const writeMarkdownFile = (pathname, content, options) => {
   if (adjustLineEndingOnSave) {
     content = convertLineEndings(content, lineEnding)
   }
-  if (extension == '.mde') {
+  if (extension === '.mde') {
     content = aesEncryptiv(content, mm)
   }
   const buffer = iconv.encode(content, encoding, { addBOM: isBom })
@@ -156,26 +156,15 @@ export const loadMarkdownFile = async (pathname, preferredEol, autoGuessEncoding
   }
 }
 
-export const aesEncrypt = (str, key) => {
-  const cipher = crypto.createCipher('aes-128-ecb', key)
-  return cipher.update(str, 'utf8', 'base64') + cipher.final('base64')
-}
-
-export const aesDecrypt = (str, key) => {
-  const decipher = crypto.createDecipher('aes-128-ecb', key)
-  return decipher.update(str, 'base64', 'utf8') + decipher.final('utf8')
-}
-
-
 export const aesEncryptiv = (str, key) => {
-  const keyBuffer = Buffer.from(key,'hex')
+  const keyBuffer = Buffer.from(key, 'hex')
   const iv = keyBuffer
   const cipher = crypto.createCipheriv('aes-128-cbc', keyBuffer, iv)
   return cipher.update(str, 'utf8', 'base64') + cipher.final('base64')
 }
 
 export const aesDecryptiv = (str, key) => {
-  const keyBuffer = Buffer.from(key,'hex')
+  const keyBuffer = Buffer.from(key, 'hex')
   const iv = keyBuffer
   const decipher = crypto.createDecipheriv('aes-128-cbc', keyBuffer, iv)
   return decipher.update(str, 'base64', 'utf8') + decipher.final('utf8')
